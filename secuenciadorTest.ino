@@ -8,7 +8,7 @@
  #define BUTTON 12
  #define PINPOT A1
  #define TIMETOCHK 50
- #define MINTIME 150
+ #define MINTIME 15
  #define MAXTIME 1500
  #define TIMEHEARTBEAT 200 
  #define LED 13
@@ -35,7 +35,7 @@ typedef struct{
 }_sTeclas;
 _sTeclas ourButton;
  unsigned long lastTime,hbTime,secuenceTime; 
- unsigned int setTime; 
+ unsigned int setTime,valuePot; 
  uint8_t actualLed;
 //prototipos de funciones 
 /*
@@ -62,13 +62,14 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-    setTime=500;
+
     if(millis()-hbTime>TIMEHEARTBEAT){
       toggleLed(LED);
       hbTime=millis();
       }
     if(millis()-lastTime > TIMETOCHK){
        actuallizaMef(); 
+       getTime();
        lastTime=millis();  
        
       }    
@@ -204,5 +205,7 @@ void toggleLed(int led){
       }
   }
 void getTime(){//funcion que lee el potenciometro y obtiene el tiempo de demora. 
-  
+  valuePot = analogRead(PINPOT);
+  setTime=map(valuePot,0,1020,MINTIME,MAXTIME);
+  Serial.println(setTime);
   }
